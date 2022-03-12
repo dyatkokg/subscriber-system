@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class SubscriberController {
 
-    private SubscriberService subscriberService;
+    private final SubscriberService subscriberService;
 
     @PutMapping("create")
     public ResponseEntity<Subscriber> create(@RequestBody Subscriber subscriber) {

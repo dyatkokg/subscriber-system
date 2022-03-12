@@ -14,7 +14,7 @@ public class Balance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Tariff tariff;
