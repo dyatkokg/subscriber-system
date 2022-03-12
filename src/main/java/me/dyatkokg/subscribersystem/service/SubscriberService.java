@@ -1,56 +1,55 @@
 package me.dyatkokg.subscribersystem.service;
 
 import lombok.RequiredArgsConstructor;
-import me.dyatkokg.subscribersystem.entity.Balance;
-import me.dyatkokg.subscribersystem.entity.Subscriber;
-import me.dyatkokg.subscribersystem.entity.Tariff;
+import me.dyatkokg.subscribersystem.dto.SubscriberDTO;
+import me.dyatkokg.subscribersystem.mapper.SubscriberMapper;
 import me.dyatkokg.subscribersystem.repository.SubscriberRepository;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
 public class SubscriberService implements SubscriberServiceInterface {
 
     private final SubscriberRepository subscriberRepository;
+    private final SubscriberMapper mapper;
 
     @Override
-    public ResponseEntity<Subscriber> create(Subscriber subscriber) {
-        return ResponseEntity.ok(subscriberRepository.save(subscriber));
+    public ResponseEntity<SubscriberDTO> create(SubscriberDTO subscriberDTO) {
+        return ResponseEntity.ok(mapper.toDTO(subscriberRepository.save(mapper.toEntity(subscriberDTO))));
     }
 
     @Override
-    public Page<Subscriber> findAll(int page, int size) {
-        return subscriberRepository.findAll(PageRequest.of(page, size));
+    public Page<SubscriberDTO> findAll(int page, int size) {
+        return subscriberRepository.findAll(PageRequest.of(page, size)).map(mapper::toDTO);
     }
 
     @Override
-    public ResponseEntity<Subscriber> deleteById(Long id) {
-        Subscriber deleted = subscriberRepository.findById(id).orElse(null);
+    public ResponseEntity<SubscriberDTO> deleteById(Long id) {
+        SubscriberDTO deleted = subscriberRepository.findById(id).map(mapper::toDTO).orElse(null);
         if (deleted == null) {
             return ResponseEntity.noContent().build();
         } else
-            subscriberRepository.delete(deleted);
+            subscriberRepository.deleteById(id);
         return ResponseEntity.ok(deleted);
     }
 
     @Override
-    public ResponseEntity<Subscriber> update(Subscriber subscriber) {
-        if (subscriberRepository.existsById(subscriber.getId())) {
-            return ResponseEntity.ok(subscriberRepository.save(subscriber));
+    public ResponseEntity<SubscriberDTO> update(SubscriberDTO subscriberDTO) {
+        if (subscriberRepository.existsById(subscriberDTO.getId())) {
+            return ResponseEntity.ok(mapper.toDTO(subscriberRepository.save(mapper.toEntity(subscriberDTO))));
         } else
             return ResponseEntity.notFound().build();
     }
 
     @Override
-    public ResponseEntity<Subscriber> getById(Long id) {
-        return subscriberRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<SubscriberDTO> getById(Long id) {
+        return subscriberRepository.findById(id)
+                .map(mapper::toDTO)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
 }

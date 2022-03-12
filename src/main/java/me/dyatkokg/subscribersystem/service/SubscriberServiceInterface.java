@@ -1,18 +1,18 @@
 package me.dyatkokg.subscribersystem.service;
 
-import me.dyatkokg.subscribersystem.entity.Subscriber;
+import me.dyatkokg.subscribersystem.dto.SubscriberDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
 public interface SubscriberServiceInterface {
 
-    ResponseEntity<Subscriber> create(Subscriber subscriber);
+    ResponseEntity<SubscriberDTO> create(SubscriberDTO subscriberDTO);
 
-    Page<Subscriber> findAll(int page, int size);
+    Page<SubscriberDTO> findAll(int page, int size);
 
-    ResponseEntity<Subscriber> deleteById(Long id);
+    ResponseEntity<SubscriberDTO> deleteById(Long id);
 
-    ResponseEntity<Subscriber> update(Subscriber subscriber);
+    ResponseEntity<SubscriberDTO> update(SubscriberDTO subscriberDTO);
 
-    ResponseEntity<Subscriber> getById(Long id);
+    ResponseEntity<SubscriberDTO> getById(Long id);
 }

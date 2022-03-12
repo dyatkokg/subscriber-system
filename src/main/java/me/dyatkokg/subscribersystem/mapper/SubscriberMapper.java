@@ -8,10 +8,11 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface SubscriberMapper {
 
-    @Mapping(source = "balance.tariff.name", target = "balance")
+    @Mapping(source = "subscriberBalance.tariff.name", target = "tariff")
+    @Mapping(source = "subscriberBalance.balance",target = "balance")
     SubscriberDTO toDTO(Subscriber subscriber);
 
 
-    @Mapping(target = "balance", ignore = true)
+    @Mapping(target = "subscriberBalance", ignore = true)
     Subscriber toEntity(SubscriberDTO subscriberDTO);
 }

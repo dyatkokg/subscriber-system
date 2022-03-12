@@ -21,6 +21,6 @@ public class Subscriber {
     private String lastName;
 
     @OneToOne(cascade = CascadeType.ALL)
-    private Balance balance;
+    private Balance subscriberBalance;
 
 }

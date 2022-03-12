@@ -1,7 +1,7 @@
 package me.dyatkokg.subscribersystem.controller;
 
 import lombok.RequiredArgsConstructor;
-import me.dyatkokg.subscribersystem.entity.Subscriber;
+import me.dyatkokg.subscribersystem.dto.SubscriberDTO;
 import me.dyatkokg.subscribersystem.service.SubscriberService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -15,29 +15,29 @@ public class SubscriberController {
     private final SubscriberService subscriberService;
 
     @PutMapping("create")
-    public ResponseEntity<Subscriber> create(@RequestBody Subscriber subscriber) {
-        return subscriberService.create(subscriber);
+    public ResponseEntity<SubscriberDTO> create(@RequestBody SubscriberDTO subscriberDTO) {
+        return subscriberService.create(subscriberDTO);
     }
 
     @GetMapping("all")
-    public Page<Subscriber> findAll(@RequestParam(value = "size", required = false, defaultValue = "10") int size,
-                                   @RequestParam(value = "page", required = false, defaultValue = "0") int page) {
+    public Page<SubscriberDTO> findAll(@RequestParam(value = "size", required = false, defaultValue = "10") int size,
+                                       @RequestParam(value = "page", required = false, defaultValue = "0") int page) {
         return subscriberService.findAll(page, size);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Subscriber> getById(@PathVariable("id") Long id) {
+    public ResponseEntity<SubscriberDTO> getById(@PathVariable("id") Long id) {
         return subscriberService.getById(id);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Subscriber> deleteById(@PathVariable("id") Long id) {
+    public ResponseEntity<SubscriberDTO> deleteById(@PathVariable("id") Long id) {
         return subscriberService.deleteById(id);
     }
 
     @PostMapping("update")
-    public ResponseEntity<Subscriber> update(@RequestBody Subscriber subscriber) {
-        return subscriberService.update(subscriber);
+    public ResponseEntity<SubscriberDTO> update(@RequestBody SubscriberDTO subscriberDTO) {
+        return subscriberService.update(subscriberDTO);
     }
 
 }
