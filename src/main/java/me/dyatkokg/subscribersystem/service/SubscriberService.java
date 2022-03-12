@@ -53,19 +53,4 @@ public class SubscriberService implements SubscriberServiceInterface {
         return subscriberRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
-
-    @EventListener
-    public void onApplicationReady(ApplicationReadyEvent event){
-        Tariff tariff = new Tariff();
-        tariff.setName("Start");
-        tariff.setPrice(200.0);
-        Balance balance=new Balance();
-        balance.setBalance(BigDecimal.valueOf(200));
-        balance.setTariff(tariff);
-        Subscriber subscriber = new Subscriber();
-        subscriber.setFirstName("Каруня");
-        subscriber.setLastName("Дятко");
-        subscriber.setBalance(balance);
-        subscriberRepository.save(subscriber);
-    }
 }
