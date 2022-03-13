@@ -1,13 +1,18 @@
-package me.dyatkokg.subscribersystem.service;
+package me.dyatkokg.subscribersystem.service.implementation;
 
 import lombok.RequiredArgsConstructor;
 import me.dyatkokg.subscribersystem.dto.SubscriberDTO;
+import me.dyatkokg.subscribersystem.exceptions.SubscriberFieldEmptiesException;
+import me.dyatkokg.subscribersystem.exceptions.SubscriberNotFoundException;
 import me.dyatkokg.subscribersystem.mapper.SubscriberMapper;
 import me.dyatkokg.subscribersystem.repository.SubscriberRepository;
+import me.dyatkokg.subscribersystem.service.SubscriberServiceInterface;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +23,9 @@ public class SubscriberService implements SubscriberServiceInterface {
 
     @Override
     public ResponseEntity<SubscriberDTO> create(SubscriberDTO subscriberDTO) {
-        return ResponseEntity.ok(mapper.toDTO(subscriberRepository.save(mapper.toEntity(subscriberDTO))));
+        if (Objects.nonNull(subscriberDTO.getFirstName()) && Objects.nonNull(subscriberDTO.getLastName())) {
+            return ResponseEntity.ok(mapper.toDTO(subscriberRepository.save(mapper.toEntity(subscriberDTO))));
+        }else throw new SubscriberFieldEmptiesException();
     }
 
     @Override
@@ -28,9 +35,9 @@ public class SubscriberService implements SubscriberServiceInterface {
 
     @Override
     public ResponseEntity<SubscriberDTO> deleteById(Long id) {
-        SubscriberDTO deleted = subscriberRepository.findById(id).map(mapper::toDTO).orElse(null);
+        SubscriberDTO deleted = subscriberRepository.findById(id).map(mapper::toDTO).orElseThrow(SubscriberNotFoundException::new);
         if (deleted == null) {
-            return ResponseEntity.noContent().build();
+            throw new SubscriberNotFoundException();
         } else
             subscriberRepository.deleteById(id);
         return ResponseEntity.ok(deleted);
@@ -40,8 +47,7 @@ public class SubscriberService implements SubscriberServiceInterface {
     public ResponseEntity<SubscriberDTO> update(SubscriberDTO subscriberDTO) {
         if (subscriberRepository.existsById(subscriberDTO.getId())) {
             return ResponseEntity.ok(mapper.toDTO(subscriberRepository.save(mapper.toEntity(subscriberDTO))));
-        } else
-            return ResponseEntity.notFound().build();
+        } else throw new SubscriberNotFoundException();
     }
 
     @Override
@@ -49,7 +55,7 @@ public class SubscriberService implements SubscriberServiceInterface {
         return subscriberRepository.findById(id)
                 .map(mapper::toDTO)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new SubscriberNotFoundException(id));
     }
 
 }

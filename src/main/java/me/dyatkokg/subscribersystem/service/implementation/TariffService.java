@@ -1,14 +1,17 @@
-package me.dyatkokg.subscribersystem.service;
+package me.dyatkokg.subscribersystem.service.implementation;
 
 import lombok.RequiredArgsConstructor;
-import me.dyatkokg.subscribersystem.dto.SubscriberDTO;
 import me.dyatkokg.subscribersystem.dto.TariffDTO;
+import me.dyatkokg.subscribersystem.exceptions.TariffFieldEmptiesException;
+import me.dyatkokg.subscribersystem.exceptions.TariffNotFoundException;
 import me.dyatkokg.subscribersystem.mapper.TariffMapper;
 import me.dyatkokg.subscribersystem.repository.TariffRepository;
+import me.dyatkokg.subscribersystem.service.TariffServiceInterface;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,14 +23,16 @@ public class TariffService implements TariffServiceInterface {
 
     @Override
     public ResponseEntity<TariffDTO> create(TariffDTO tariffDTO) {
-        return ResponseEntity.ok(mapper.toDTO(tariffRepository.save(mapper.toEntity(tariffDTO))));
+        if (Objects.nonNull(tariffDTO.getName()) && Objects.nonNull(tariffDTO.getPrice())) {
+            return ResponseEntity.ok(mapper.toDTO(tariffRepository.save(mapper.toEntity(tariffDTO))));
+        } else throw new TariffFieldEmptiesException();
     }
 
     @Override
     public ResponseEntity<TariffDTO> deleteById(Long id) {
-        TariffDTO deleted = tariffRepository.findById(id).map(mapper::toDTO).orElse(null);
+        TariffDTO deleted = tariffRepository.findById(id).map(mapper::toDTO).orElseThrow(TariffNotFoundException::new);
         if (deleted == null) {
-            return ResponseEntity.noContent().build();
+            throw new TariffNotFoundException();
         } else
             tariffRepository.deleteById(id);
         return ResponseEntity.ok(deleted);
@@ -37,8 +42,7 @@ public class TariffService implements TariffServiceInterface {
     public ResponseEntity<TariffDTO> update(TariffDTO tariffDTO) {
         if (tariffRepository.existsById(tariffDTO.getId())) {
             return ResponseEntity.ok(mapper.toDTO(tariffRepository.save(mapper.toEntity(tariffDTO))));
-        } else
-            return ResponseEntity.notFound().build();
+        } else throw new TariffNotFoundException();
     }
 
     @Override
@@ -46,7 +50,7 @@ public class TariffService implements TariffServiceInterface {
         return tariffRepository.findById(id)
                 .map(mapper::toDTO)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new TariffNotFoundException(id));
     }
 
     public ResponseEntity<List<TariffDTO>> findAll() {

@@ -2,7 +2,7 @@ package me.dyatkokg.subscribersystem.controller;
 
 import lombok.RequiredArgsConstructor;
 import me.dyatkokg.subscribersystem.dto.SubscriberDTO;
-import me.dyatkokg.subscribersystem.service.SubscriberService;
+import me.dyatkokg.subscribersystem.service.implementation.SubscriberService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,9 +1,8 @@
 package me.dyatkokg.subscribersystem.controller;
 
 import lombok.RequiredArgsConstructor;
-import me.dyatkokg.subscribersystem.dto.SubscriberDTO;
 import me.dyatkokg.subscribersystem.dto.TariffDTO;
-import me.dyatkokg.subscribersystem.service.TariffService;
+import me.dyatkokg.subscribersystem.service.implementation.TariffService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
