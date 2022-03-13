@@ -14,5 +14,5 @@ public class SubscriberDTO {
     private String firstName;
     private String lastName;
     private String tariff;
-    private BigDecimal balance;
+    private Double balance;
 }

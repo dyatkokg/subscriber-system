@@ -19,6 +19,6 @@ public class Balance {
     @OneToOne(cascade = CascadeType.ALL)
     private Tariff tariff;
 
-    private BigDecimal balance;
+    private Double balance;
 
 }

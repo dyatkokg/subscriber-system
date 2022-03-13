@@ -10,4 +10,6 @@ public interface TariffRepository extends CrudRepository<Tariff, Long> {
 
     @NonNull
     List<Tariff> findAll();
+
+    Tariff findByName(String name);
 }
