@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.dyatkokg.subscribersystem.dto.SubscriberDTO;
 import me.dyatkokg.subscribersystem.entity.Balance;
 import me.dyatkokg.subscribersystem.entity.Subscriber;
+import me.dyatkokg.subscribersystem.entity.Tariff;
 import me.dyatkokg.subscribersystem.exceptions.SubscriberFieldEmptiesException;
 import me.dyatkokg.subscribersystem.exceptions.SubscriberNotFoundException;
 import me.dyatkokg.subscribersystem.exceptions.TariffNotFoundException;
@@ -27,21 +28,6 @@ public class SubscriberService implements SubscriberServiceInterface {
     private final TariffRepository tariffRepository;
 
     @Override
-    public ResponseEntity<SubscriberDTO> create(SubscriberDTO subscriberDTO) {
-        if (Objects.nonNull(subscriberDTO.getFirstName()) && Objects.nonNull(subscriberDTO.getLastName())) {
-            Subscriber subscriber;
-            subscriber = mapper.toEntity(subscriberDTO);
-            Balance balance = subscriber.getSubscriberBalance();
-            balance.setTariff(tariffRepository.findByName(subscriberDTO.getTariff()));
-            balance.setBalance(subscriberDTO.getBalance());
-            subscriber.setSubscriberBalance(balance);
-            if (Objects.nonNull(tariffRepository.findByName(subscriberDTO.getTariff()))) {
-                return ResponseEntity.ok(mapper.toDTO(subscriberRepository.save(subscriber)));
-            } else throw new TariffNotFoundException();
-        } else throw new SubscriberFieldEmptiesException();
-    }
-
-    @Override
     public Page<SubscriberDTO> findAll(int page, int size) {
         return subscriberRepository.findAll(PageRequest.of(page, size)).map(mapper::toDTO);
     }
@@ -57,14 +43,6 @@ public class SubscriberService implements SubscriberServiceInterface {
     }
 
     @Override
-    public ResponseEntity<SubscriberDTO> update(SubscriberDTO subscriberDTO) {
-        if (subscriberRepository.existsById(subscriberDTO.getId())) {
-
-            return ResponseEntity.ok(mapper.toDTO(subscriberRepository.save(mapper.toEntity(subscriberDTO))));
-        } else throw new SubscriberNotFoundException();
-    }
-
-    @Override
     public ResponseEntity<SubscriberDTO> getById(Long id) {
         return subscriberRepository.findById(id)
                 .map(mapper::toDTO)
@@ -72,5 +50,24 @@ public class SubscriberService implements SubscriberServiceInterface {
                 .orElseThrow(() -> new SubscriberNotFoundException(id));
     }
 
-
+    public ResponseEntity<SubscriberDTO> update(SubscriberDTO subscriberDTO) {
+        if (Objects.nonNull(subscriberDTO.getFirstName()) && Objects.nonNull(subscriberDTO.getLastName())) {
+            Subscriber subscriber;
+            if (Objects.nonNull(subscriberDTO.getId())) {
+                subscriber = subscriberRepository.findById(subscriberDTO.getId()).orElseThrow(SubscriberNotFoundException::new);
+                subscriber.setFirstName(subscriberDTO.getFirstName());
+                subscriber.setLastName(subscriberDTO.getLastName());
+            } else {
+                subscriber = mapper.toEntity(subscriberDTO);
+            }
+            if (Objects.nonNull(subscriberDTO.getTariff())) {
+                Tariff tariff = tariffRepository.findByName(subscriberDTO.getTariff()).orElseThrow(TariffNotFoundException::new);
+                Balance balance = new Balance();
+                balance.setTariff(tariff);
+                balance.setBalance(tariff.getPrice());
+                subscriber.setSubscriberBalance(balance);
+            }
+            return ResponseEntity.ok(mapper.toDTO(subscriberRepository.save(subscriber)));
+        } else throw new SubscriberFieldEmptiesException();
+    }
 }

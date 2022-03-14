@@ -6,8 +6,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface SubscriberServiceInterface {
 
-    ResponseEntity<SubscriberDTO> create(SubscriberDTO subscriberDTO);
-
     Page<SubscriberDTO> findAll(int page, int size);
 
     ResponseEntity<SubscriberDTO> deleteById(Long id);

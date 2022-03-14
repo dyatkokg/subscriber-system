@@ -14,9 +14,9 @@ public class SubscriberController {
 
     private final SubscriberService subscriberService;
 
-    @PutMapping("create")
-    public ResponseEntity<SubscriberDTO> create(@RequestBody SubscriberDTO subscriberDTO) {
-        return subscriberService.create(subscriberDTO);
+    @PutMapping("update")
+    public ResponseEntity<SubscriberDTO> update(@RequestBody SubscriberDTO subscriberDTO) {
+        return subscriberService.update(subscriberDTO);
     }
 
     @GetMapping("all")
@@ -33,11 +33,6 @@ public class SubscriberController {
     @DeleteMapping("{id}")
     public ResponseEntity<SubscriberDTO> deleteById(@PathVariable("id") Long id) {
         return subscriberService.deleteById(id);
-    }
-
-    @PostMapping("update")
-    public ResponseEntity<SubscriberDTO> update(@RequestBody SubscriberDTO subscriberDTO) {
-        return subscriberService.update(subscriberDTO);
     }
 
 }

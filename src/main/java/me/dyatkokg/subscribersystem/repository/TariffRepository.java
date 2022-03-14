@@ -5,11 +5,12 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TariffRepository extends CrudRepository<Tariff, Long> {
 
     @NonNull
     List<Tariff> findAll();
 
-    Tariff findByName(String name);
+   Optional<Tariff> findByName(String name);
 }
