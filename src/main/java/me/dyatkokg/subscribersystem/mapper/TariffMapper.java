@@ -11,7 +11,7 @@ public interface TariffMapper {
     @Mapping(source = "name", target = "name")
     TariffDTO toDTO(Tariff tariff);
 
-    @Mapping(target = "price",ignore = true)
+    @Mapping(source = "price",target = "price")
     Tariff toEntity(TariffDTO tariffDTO);
 
 }
