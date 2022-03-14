@@ -15,9 +15,9 @@ public class TariffController {
 
     private final TariffService tariffService;
 
-    @PutMapping("create")
-    public ResponseEntity<TariffDTO> create(@RequestBody TariffDTO tariffDTO) {
-        return tariffService.create(tariffDTO);
+    @PutMapping("update")
+    public ResponseEntity<TariffDTO> update(@RequestBody TariffDTO tariffDTO) {
+        return tariffService.update(tariffDTO);
     }
 
     @GetMapping("all")
@@ -33,11 +33,6 @@ public class TariffController {
     @DeleteMapping("{id}")
     public ResponseEntity<TariffDTO> deleteById(@PathVariable("id") Long id) {
         return tariffService.deleteById(id);
-    }
-
-    @PostMapping("update")
-    public ResponseEntity<TariffDTO> update(@RequestBody TariffDTO tariffDTO) {
-        return tariffService.update(tariffDTO);
     }
 
 }

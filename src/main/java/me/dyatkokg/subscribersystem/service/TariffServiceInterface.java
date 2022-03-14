@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface TariffServiceInterface {
 
-    ResponseEntity<TariffDTO> create(TariffDTO tariffDTO);
-
     ResponseEntity<TariffDTO> deleteById(Long id);
 
     ResponseEntity<TariffDTO> update(TariffDTO tariffDTO);
