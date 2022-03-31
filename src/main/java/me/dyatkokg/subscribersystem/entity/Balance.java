@@ -20,4 +20,7 @@ public class Balance {
 
     private Double balance;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private Subscriber subscriber;
+
 }
