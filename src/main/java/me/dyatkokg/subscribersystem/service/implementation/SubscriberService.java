@@ -64,7 +64,7 @@ public class SubscriberService implements SubscriberServiceInterface {
                 Tariff tariff = tariffRepository.findByName(subscriberDTO.getTariff()).orElseThrow(TariffNotFoundException::new);
                 Balance balance = new Balance();
                 balance.setTariff(tariff);
-                balance.setBalance(tariff.getPrice());
+                balance.setBalance(subscriberDTO.getBalance());
                 subscriber.setSubscriberBalance(balance);
             }
             return ResponseEntity.ok(mapper.toDTO(subscriberRepository.save(subscriber)));

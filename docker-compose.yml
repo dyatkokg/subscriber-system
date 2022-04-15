@@ -1,0 +1,54 @@
+version: '3'
+
+
+services:
+  balance-caching-api:
+    image: balance-caching-api:1.7
+    container_name: "balance-caching-api"
+    depends_on:
+      - subscriber-system
+      - rabbitmq
+    ports:
+      - "5554:8082"
+    environment:
+      BALANCES_URL: subscriber-system:8081/balance/
+      RABBIT_HOST: rabbitmq
+      RABBIT_USER: guest
+      RABBIT_PASSWORD: guest
+      RABBIT_VHOST: /
+
+
+  postgres:
+    image: postgres
+    container_name: balance_postgres
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: database
+    volumes:
+      - ./docker/volumes/postgres:/var/lib/postgresql/data
+
+
+  rabbitmq:
+    image: rabbitmq
+    container_name: 'rabbitmq'
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    volumes:
+        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+
+
+  subscriber-system:
+    image: subscriber-system:1.3
+    container_name: "subscriber-system"
+    depends_on:
+      - postgres
+    ports:
+      - "5556:8081"
+    environment:
+      POSTGRES_DB: jdbc:postgresql://postgres:5432/postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: database
